@@ -6,3 +6,17 @@
 .gameImg {
   text-align: center;
 }
+
+.popUp {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.popUp > *:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: 0.07ms;
+
+
+}

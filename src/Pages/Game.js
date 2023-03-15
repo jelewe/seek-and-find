@@ -2,59 +2,79 @@ import img from '../Components/imgs/img.jpg'
 import { useState, useEffect } from 'react';
 
 
+
 const Game = () => {
 
     //add sticky header to show characters to find
     //add timer
     //add popovers 
 
-    const [boxCoords, setBoxCoords] = useState({ x: null, y: null });
+    const [circCoords, setCircCoords] = useState({ x: null, y: null });
+    const [boxCoords, setBoxCoords] = useState({  x: null, y: null });
 
     const handleClick = (e) => {
         console.log(e)
-        drawBox(e)
+        drawCircle(e)
     }
 
-    const drawBox = (e) => {
+    const drawCircle = (e) => {
         const rect = e.target.getBoundingClientRect(); 
-        console.log(rect)
-        console.log(window.innerWidth)
+        const boxSize = 60; 
+        const y = e.clientY - rect.top;
+        const boxY = y - boxSize / 2;
+        let x = e.clientX
+        const boxX = x - boxSize / 2;
         if (window.innerWidth > 1432) { //this is when center align kicks in and rect no longer applies, i think
-            const x = e.clientX
-            const y = e.clientY - rect.top;
-        const boxSize = 60; 
-        const boxX = x - boxSize / 2;
-        const boxY = y - boxSize / 2;
-        setBoxCoords({ x: boxX, y: boxY });
+            setCircCoords({ x: boxX, y: boxY });
+            setBoxCoords({ x: boxX + 60, y: boxY + 60 })
         } else {
-            const x = e.clientX - rect.left;  //calculates horizontal offset since image is center aligned
-            const y = e.clientY - rect.top;
-        const boxSize = 60; 
-        const boxX = x - boxSize / 2;
-        const boxY = y - boxSize / 2;
-        setBoxCoords({ x: boxX, y: boxY });
+            x = x - rect.left;  //calculates horizontal offset since image is center aligned
+            setCircCoords({ x: boxX, y: boxY });
+            setBoxCoords({ x: boxX + 60, y: boxY + 60})
         }
+        console.log(boxX)
     }
+
+
 
     return (
         <div  style={{ position: "relative" }} className="gameImg">
-            <img src= {img} 
-                alt ="hundreds of cartoon characters" 
-                onClick= {(e) => handleClick(e)} 
-            />
-            {boxCoords.x !== null && (
-                <div
+            
+                <img src= {img} 
+                    alt ="hundreds of cartoon characters" 
+                    onClick= {(e) => handleClick(e)} 
+                />
+
+            {circCoords.x !== null && (
+                <div>
+                    <div
+                        style={{
+                        position: "absolute",
+                        left: circCoords.x + "px",
+                        top: circCoords.y + "px",
+                        width: "60px",
+                        height: "60px",
+                        border: "1px solid white",
+                        borderRadius: "50px",
+                        boxShadow: "0 0 20px 25px #000000"
+                        }}
+                    />
+                    <div
                     style={{
                     position: "absolute",
                     left: boxCoords.x + "px",
                     top: boxCoords.y + "px",
-                    width: "60px",
-                    height: "60px",
-                    border: "1px dashed white",
-                    borderRadius: "50px",
-                   boxShadow: "0 0 20px 15px #000000"
-                    }}
-                />
+                    width: "150px",
+                    height: "180px",
+                    color: "white",
+                    backgroundColor: "black",
+                    borderRadius: "4px",
+                    }} className="popUp">
+                        <div id="SM">Super Mario</div>
+                        <div id="BS">Bart Simpson</div>
+                        <div id="WP">Winnie the Pooh</div>
+                    </div>
+                </div>
                 )}
             <br />
             <span>
@@ -65,19 +85,3 @@ const Game = () => {
 }
 
 export default Game
-
-/*     const drawBox = (e) => {
-        //starts to fail around 1500 vw -- likely due to imgRect width
-        const img = e.target;
-        const imgRect = img.getBoundingClientRect();
-        console.log(imgRect)
-        const imgWidth = img.naturalWidth || img.width; // get the image's natural width or fallback to the rendered width
-        const imgHeight = img.naturalHeight || img.height; // get the image's natural height or fallback to the rendered height
-        const x = e.clientX - imgRect.left;
-        const y = e.clientY - imgRect.top;
-        const boxSize = 50; // Change the box size as needed
-        const boxX = x / imgRect.width * imgWidth - boxSize / 2;
-        const boxY = y / imgRect.height * imgHeight - boxSize / 2;
-        setBoxCoords({ x: boxX, y: boxY });
-    }
-    */
