@@ -1,10 +1,15 @@
 
 .nav {
-  height: 5vh;
+  height: 50px;
 }
 
 .gameImg {
   text-align: center;
+}
+
+.gameImg > img {
+  display: block;
+  width: 100%;
 }
 
 .popUp {
@@ -13,10 +18,12 @@
   justify-content: space-around;
 }
 
+.popUp > * > img {
+  height: 45px;
+}
+
 .popUp > *:hover {
   cursor: pointer;
   transform: scale(1.1);
   transition: 0.07ms;
-
-
 }
