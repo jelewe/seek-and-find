@@ -1,10 +1,11 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 import {
     getFirestore,
     collection,
     addDoc,
     query,
+    where,
     orderBy,
     limit,
     onSnapshot,
@@ -12,6 +13,8 @@ import {
     updateDoc,
     doc,
     serverTimestamp,
+    getDoc,
+    getDocs,
   } from 'firebase/firestore';
   import {
     getStorage,
@@ -22,17 +25,25 @@ import {
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBoKM7xIw7gwJHnekJ3K5Mkw0IIWzjGAU8",
-  authDomain: "seek-and-find-f9a21.firebaseapp.com",
-  projectId: "seek-and-find-f9a21",
-  storageBucket: "seek-and-find-f9a21.appspot.com",
-  messagingSenderId: "1002565657693",
-  appId: "1:1002565657693:web:9011d773266bec42eb19b4"
-};
+
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const config = {
+    apiKey: "AIzaSyBoKM7xIw7gwJHnekJ3K5Mkw0IIWzjGAU8",
+    authDomain: "seek-and-find-f9a21.firebaseapp.com",
+    projectId: "seek-and-find-f9a21",
+    storageBucket: "seek-and-find-f9a21.appspot.com",
+    messagingSenderId: "1002565657693",
+    appId: "1:1002565657693:web:9011d773266bec42eb19b4"
+  };
 
-export default app
+const app = initializeApp(config);
+const firestore = getFirestore(app)
+
+
+
+
+
+
+
+export { app, firestore }
