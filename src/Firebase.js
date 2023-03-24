@@ -14,7 +14,7 @@ import {
     doc,
     serverTimestamp,
     getDoc,
-    getDocs,
+    getDocs
   } from 'firebase/firestore';
   import {
     getStorage,
@@ -22,6 +22,15 @@ import {
     uploadBytesResumable,
     getDownloadURL,
   } from 'firebase/storage';
+  import { 
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    getAuth
+  } from 'firebase/auth';
+  import { useNavigate } from 'react-router-dom';
+  
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -41,9 +50,43 @@ const app = initializeApp(config);
 const firestore = getFirestore(app)
 
 
+async function signIn() {
+    // Sign in Firebase using popup auth and Google as the identity provider.
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(getAuth(), provider);
+  }
+
+  function signOutUser() {
+    // Sign out of Firebase.
+    signOut(getAuth());
+  }
+
+  // Returns the signed-in user's display name.
+function getUserName() {
+    return getAuth().currentUser.displayName;
+  }
 
 
+  async function addScore(time) {
+        
+    try {
+        await addDoc(collection(firestore, 'leaderboard'), {
+            name: getUserName(),
+            time: time
+        })
+    }
+    catch (error) {
+        console.log('Error: ', error)
+    }
+    finally {
+        signOutUser()
+    }
+}
 
+const saveScore = (time) => {
+    signIn();
+    addScore(time);
+    
+}
 
-
-export { app, firestore }
+export { app, firestore, saveScore }
