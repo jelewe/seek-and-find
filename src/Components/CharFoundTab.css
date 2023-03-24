@@ -1,0 +1,19 @@
+#confirmCharFound {
+    position:absolute;
+    color: white;
+    display: flex;
+}
+
+.found {
+    border-radius: 10px;
+    border: 5px solid black;
+    padding: 0.2rem;
+    background-color: limegreen;
+}
+
+.nope {
+    border-radius: 10px;
+    border: 5px solid black;
+    padding: 0.2rem;
+    background-color: red;
+}

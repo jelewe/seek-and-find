@@ -1,19 +1,16 @@
 import img from '../Components/imgs/img.jpg'
-import bart from '../Components/imgs/bart.png'
-import mario from '../Components/imgs/mario.png'
-import winnie from '../Components/imgs/winnie.png'
-import GameOver from '../Components/GameOver'
+import { Timer } from '../Components/Timer'
 import { useEffect, useState } from 'react';
 import { firestore } from '../Firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import CharSelectTab from '../Components/CharSelectTab';
+import CharFoundTab from '../Components/CharFoundTab';
 
 
 
 
 const Game = () => {
-
     //add sticky header to show characters to find
-    //add timer
 
 
     const [circCoords, setCircCoords] = useState({ x: null, y: null });
@@ -23,7 +20,10 @@ const Game = () => {
     const [targetCoords, setTargetCoords] = useState({ x: null, y: null })
     const [charList, setCharList] = useState([ {name: 'bart', found: null}, {name: 'mario', found: null}, {name: 'winnie', found: null} ])
     const [gameOver, setGameOver] = useState(null)
-    const [time, setTime] = useState(0)
+    const [time, setTime] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [found, setFound] = useState(false)
+    const [foundTab, setFoundTab] = useState(false)
 
 
     const drawCircle = (e) => {
@@ -35,6 +35,11 @@ const Game = () => {
         setCharCoords({ x: e.pageX, y: e.pageY })
     }
 
+    const handleCharSelect = (id) => {
+        setSelectedChar(id);
+        getCoords(id);
+    }
+
     const compareCoords = (targetCoords) => {
         const ratio = document.body.scrollWidth / 1432 //original img width
         const newX = targetCoords.x * ratio
@@ -42,46 +47,79 @@ const Game = () => {
 
             //using 30 to accomodate for circumference of circle, character will be within circle
             if ((charCoords.x > newX - 30 && charCoords.x  < newX + 30) && (charCoords.y> newY - 30 && charCoords.y < newY + 30)) {
-            console.log("good job")
-            updateCharList();
+                console.log("good job")
+                updateCharList();
+                confirmFind(true);
             } else {
-                console.log('error')
+                console.log('error');
+                confirmFind(false)
             }
     }
 
+    const confirmFind = (bool) => {
+        if ( bool === true) {
+            setFound(true);
+            setFoundTab(true);
+        } else if ( bool === false) {
+            setFoundTab(true);
+        }
+        setCircCoords({ x: null, y: null })
+    }
+
+    const resetFoundTab = () => {
+        setFoundTab(false);
+        setFound(false)
+    }
+
     const updateCharList = () => {
-        const updatedList = charList.map(
+        const updatedList = charList.map
+        (
             char => char.name === selectedChar ? { ...char, found: true } : char
         )
         setCharList(updatedList)
-        console.log(charList)
     }
 
-    
 
     const getCoords =  async (id) => {
-        const q = doc(firestore, 'coordinates', id)
-        const docSnap = await getDoc(q);
-            if (docSnap.exists()) {
-                console.log("Document data:", docSnap.data());
-                console.log(docSnap.data().x)
+        try {
+            setLoading(true);
+            const q = doc(firestore, 'coordinates', id)
+            //const d = doc(q, id)
+            const docSnap = await getDoc(q);
+            //if (docSnap.exists()) {
+               // console.log("Document data:", docSnap.data());
+               // console.log(docSnap.data().x)
                 setTargetCoords({ x: docSnap.data().x, y: docSnap.data().y})
-              } else {
+              } catch (error) {
                 // docSnap.data() will be undefined in this case
-                console.log("No such document!");
-              }  
+                console.log(error);
+              }  finally {
+                setLoading(false)
+              }
+        }
+    
+
+
+    const resetGame = () => {
+        setCircCoords({ x: null, y: null })
+        setBoxCoords({ x: null, y: null })
+        setCharCoords({ x: null, y: null });
+        setSelectedChar(null)
+        setTargetCoords({ x: null, y: null })
+        setCharList([ {name: 'bart', found: null}, {name: 'mario', found: null}, {name: 'winnie', found: null} ])
+        setGameOver(null)
+        setTime(0)
+        resetFoundTab();
     }
 
-/*    const scroll = () => {
-        if (ref && ref.current)
-        ref.current.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'start'})
-    }*/
 
+/*
 //when user selects character from box, fetch character coords from firebase
     useEffect(() => {
         if (selectedChar) 
         getCoords(selectedChar);
     }, [selectedChar]);
+    */
 
 //when firebase sets target coordinates, compare coordinates
     useEffect(() => {
@@ -93,8 +131,13 @@ const Game = () => {
     useEffect(() => {
         if (charList[0].found === true && charList[1].found === true && charList[2].found === true)
         setGameOver(true);
-        console.log({gameOver})
     }, [charList])
+
+    useEffect(() => {
+        if (gameOver)
+        resetFoundTab();
+        setBoxCoords({ x: null, y: null })
+    }, [gameOver])
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -102,43 +145,53 @@ const Game = () => {
             setTime((prevTime) => prevTime + 1);
           }
         }, 1000);
-
         return () => clearInterval(timer);
       }, [gameOver]);
 
+ useEffect(() => {
+        let timeOut;
+        if (foundTab) {
+            timeOut = setTimeout(() => {
+                    resetFoundTab();
+                    setBoxCoords({ x: null, y: null })
+                }, 1000);
+            }
+        return () => {
+            clearTimeout(timeOut);
+        }
+    }, [foundTab]);
 
-    useEffect(() => {
-        if (gameOver) 
-        setCircCoords({ x: null, y: null })
-        setBoxCoords({ x: null, y: null })
-    }, [gameOver])
 
 
 
     return (
         <div  style={{ position: "relative" }} className="gameImg">
-            { gameOver && <div style={{
+
+        { foundTab ? 
+            <CharFoundTab selectedChar= { selectedChar } found= { found } boxCoords= { boxCoords } /> 
+            : null }
+            
+        { gameOver && <div style={{
                         position: "absolute",
-                        left: "300px",
-                        top: "300px",
-                        width: "200px",
-                        height: "200px",
+                        width: "100vw",
+                        height: "100vh",
+                        paddingTop: "10rem",
                         color: "white",
                         backgroundColor: "black",
-                        borderRadius: "10px",
                         }} id="congrats">
-                            <p>Congratulations! You found all the characters!</p><br />
-                            <p>Your time was {time} </p>
+                            <p><b>Congratulations! You found all the characters!</b></p>
+                                <br />
+                            <Timer time= {time} reset= { resetGame } />
                         </div> 
+        }
 
-            }
 
-
-            
+            { !gameOver && 
                 <img src= {img} 
                     alt ="hundreds of cartoon characters" 
                     onClick= {(e) => drawCircle(e)} 
                 />
+            }
 
             {circCoords.x !== null && (
                 <div>
@@ -159,25 +212,15 @@ const Game = () => {
                     position: "absolute",
                     left: boxCoords.x + "px",
                     top: boxCoords.y + "px",
-                    width: "190px",
-                    height: "180px",
                     color: "white",
                     backgroundColor: "black",
                     borderRadius: "4px",
                     }} className="popUp">
-                        <div id="mario"
-                                onClick= {(e) => setSelectedChar(e.target.id)}>
-                            <img src={mario} alt="Super Mario" /> Super Mario
-                        </div>
-                        <div id="bart"
-                                onClick= {(e) => setSelectedChar(e.target.id)}>
-                            <img src={bart} alt="Bart Simpson" />Bart Simpson
-                        </div>
-                        <div id="winnie"
-                                onClick= {(e) => setSelectedChar(e.target.id)}>
-                            <img src={winnie} alt="Winnie the Pooh" />Winnie the Pooh
-                        </div>
-                    </div>
+
+                    <CharSelectTab loading= { loading } handleCharSelect= { handleCharSelect } charList= { charList } />
+
+                    </div> 
+
                 </div>
                 )}
                

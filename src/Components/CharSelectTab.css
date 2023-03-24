@@ -1,0 +1,19 @@
+.charSelectTab {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 0;
+}
+
+.charSelectTab > * > img {
+    height: 45px !important;
+  }
+  
+  .charSelectTab > *:hover {
+    cursor: pointer;
+    color:yellow;
+    transition: 0.07ms;
+  }
+
+  .charSelectTab > * {
+    padding: 0.5rem;
+  }
