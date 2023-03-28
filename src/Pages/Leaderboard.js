@@ -55,7 +55,7 @@ const Leaderboard = () => {
                 :
                 <div className="user">
                    { 
-                        board.map((i) => <div key = {i.index} className="name"> {i.name} {formatTime(i.time)} </div>)
+                        board.map((i) => <div key = {board[i]} className="name"> {i.name} {formatTime(i.time)} </div>)
                    }
                 </div>
 

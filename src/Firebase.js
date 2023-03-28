@@ -12,7 +12,7 @@ import {
     signOut,
     getAuth
   } from 'firebase/auth';
-  
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -46,12 +46,18 @@ async function signIn() {
 
   // Returns the signed-in user's display name.
 function getUserName() {
-    return getAuth().currentUser.displayName;
+  const user = getAuth().currentUser.displayName;
+    if (user === null) {
+      setTimeout(() => {
+        getUserName()
+      }, 500)
+    } else {
+      return user
+    }
   }
 
 
   async function addScore(time) {
-        
     try {
         await addDoc(collection(firestore, 'leaderboard'), {
             name: getUserName(),
@@ -61,15 +67,10 @@ function getUserName() {
     catch (error) {
         console.log('Error: ', error)
     }
-    finally {
-        signOutUser()
-    }
 }
 
 const saveScore = (time) => {
-    signIn();
-    addScore(time);
-    
+    signIn().then(addScore(time));
 }
 
 export { app, firestore, saveScore }

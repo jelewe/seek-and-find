@@ -50,11 +50,9 @@ const Game = () => {
 
             //using 30 to accomodate for circumference of circle, character will be within circle
             if ((charCoords.x > newX - 30 && charCoords.x  < newX + 30) && (charCoords.y> newY - 30 && charCoords.y < newY + 30)) {
-                console.log("good job")
                 updateCharList();
                 confirmFind(true);
             } else {
-                console.log('error');
                 confirmFind(false)
             }
     }

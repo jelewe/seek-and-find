@@ -9,10 +9,14 @@ export const Timer = ({time, reset}) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
 
-    const navigate= useNavigate()
+    const navigate= useNavigate();
+
+
     const saveAndGo = (time) => {
-        saveScore(time);
-        navigate("/leaderboard")
+        saveScore(time)
+        setTimeout(() => {
+          navigate("/leaderboard")
+        }, 3000);
     }
 
 
