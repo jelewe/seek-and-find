@@ -1,7 +1,14 @@
 import './CharFoundTab.css'
 
 const CharFoundTab = ({selectedChar, found, boxCoords}) => {
+
+    const capitalize = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     return (
+
+   
 
         <div id="confirmCharFound"
                 style={{left: boxCoords.x + "px",
@@ -9,7 +16,7 @@ const CharFoundTab = ({selectedChar, found, boxCoords}) => {
             {
                 found ? 
                 <div className= "found">
-                    <b>You found {selectedChar}! </b>
+                    <b>You found {capitalize(selectedChar)}! </b>
                 </div>
                 :
                 <div className='nope'>

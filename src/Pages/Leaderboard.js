@@ -1,5 +1,5 @@
 import { Spinner } from "react-bootstrap";
-import { doc, collection, query, orderBy, getDocs } from "firebase/firestore";
+import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { firestore } from "../Firebase";
 import { useEffect, useState } from "react";
 
@@ -28,14 +28,12 @@ const Leaderboard = () => {
             const q = query(collection(firestore, 'leaderboard'), orderBy('time', 'asc'));
             const qSnap = await getDocs(q);
                 qSnap.forEach((doc) => {
-                    console.log(doc.id, "=>", doc.data())
                     setBoard((prev) => [...prev, doc.data()])
                 });
               } catch (error) {
                 console.log(error);
               }  finally {
                 setDownloading(false)
-                console.log(board)
               }
         }
 
@@ -45,6 +43,9 @@ const Leaderboard = () => {
 
     return (
         <div className="board">
+            <div style= {{ textAlign: "end" }}><b>Name</b></div>
+            <div><b>Time</b></div>
+
             { downloading ? 
                 <div>
                     <Spinner animation="border" variant="light">

@@ -4,31 +4,14 @@ import {
     getFirestore,
     collection,
     addDoc,
-    query,
-    where,
-    orderBy,
-    limit,
-    onSnapshot,
-    setDoc,
-    updateDoc,
-    doc,
-    serverTimestamp,
-    getDoc,
-    getDocs
   } from 'firebase/firestore';
-  import {
-    getStorage,
-    ref,
-    uploadBytesResumable,
-    getDownloadURL,
-  } from 'firebase/storage';
+
   import { 
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
     getAuth
   } from 'firebase/auth';
-  import { useNavigate } from 'react-router-dom';
   
 
 // TODO: Add SDKs for Firebase products that you want to use

@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { saveScore } from "../Firebase";
+import { Button } from "react-bootstrap";
+import './Timer.css'
+
 
 
 export const Timer = ({time, reset}) => {
@@ -15,11 +18,15 @@ export const Timer = ({time, reset}) => {
 
 
     return (
-        <div className="Timer">
+      <div className="Timer">
+        <p><b>Congratulations! You found all the characters!</b></p>
+                                <br />
+        
           <p>Time elapsed: {minutes}:{seconds < 10 ? "0" : ""}{seconds}</p>
-            <button type="button" onClick={(e) => reset()}>Play again</button>
-            <button type="button" onClick= {(e) => saveAndGo(time)}>Save Score</button>
-            <button type="button" onClick={(e) =>navigate("/")}>Home</button>
+            <Button variant="light" onClick={(e) => reset()}>Play Again</Button>
+            <Button variant="light" onClick= {(e) => saveAndGo(time)}>Save Score</Button>
+            <Button variant="light" onClick={(e) => navigate("/")}>Go Home</Button>
         </div>
+      
       );
 }

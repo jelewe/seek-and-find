@@ -5,6 +5,9 @@ import { firestore } from '../Firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import CharSelectTab from '../Components/CharSelectTab';
 import CharFoundTab from '../Components/CharFoundTab';
+import bart from '../Components/imgs/bart.png'
+import mario from '../Components/imgs/mario.png'
+import winnie from '../Components/imgs/winnie.png'
 
 
 
@@ -113,14 +116,6 @@ const Game = () => {
     }
 
 
-/*
-//when user selects character from box, fetch character coords from firebase
-    useEffect(() => {
-        if (selectedChar) 
-        getCoords(selectedChar);
-    }, [selectedChar]);
-    */
-
 //when firebase sets target coordinates, compare coordinates
     useEffect(() => {
         if (targetCoords.x)
@@ -166,6 +161,11 @@ const Game = () => {
 
     return (
         <div  style={{ position: "relative" }} className="gameImg">
+            <div id="finder">
+                 Find Bart <img src={bart} alt ="Bart Simpson" height= "25px"/>
+                        Mario <img src={mario} alt ="Bart Simpson" height= "25px"/> and 
+                        Winnie <img src={winnie} alt ="Bart Simpson" height= "25px"/>
+            </div>
 
         { foundTab ? 
             <CharFoundTab selectedChar= { selectedChar } found= { found } boxCoords= { boxCoords } /> 
@@ -179,8 +179,6 @@ const Game = () => {
                         color: "white",
                         backgroundColor: "black",
                         }} id="congrats">
-                            <p><b>Congratulations! You found all the characters!</b></p>
-                                <br />
                             <Timer time= {time} reset= { resetGame } />
                         </div> 
         }
