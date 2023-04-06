@@ -1,3 +1,9 @@
+:star2::star2::star2::star2::star2::star2::star2::star2::star2::star2: <br />
+This project was created as part of <a href="https://www.theodinproject.com/">The Odin Project.</a> <br />
+I developed this project using Reactjs, functional components, lifecycle hooks, React Router for navigation, Bootstrap, HTML, CSS, and Firebase. I utilized Firebase Firestore for database document creation and querying, as well as Firebase Auth for user authentication and sign-in. <br />
+You can view the game here: https://seek-and-find-f9a21.web.app/ <br />
+:star2::star2::star2::star2::star2::star2::star2::star2::star2::star2: <br />
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
